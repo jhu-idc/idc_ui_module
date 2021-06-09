@@ -1,6 +1,9 @@
 langcode: en
 status: true
-dependencies: {}
+dependencies:
+  enforced:
+    module:
+      - idc_ui_module
 id: idc_ingest_new_contact_config
 class: null
 field_plugin_method: null
