@@ -1,17 +1,13 @@
 langcode: en
 status: true
-dependencies:
-  enforced:
-    module:
-      - idc_ui_module
-id: idc_ui_module_contact_email
+dependencies: {  }
+id: idc_ingest_new_contact_email
 class: null
 field_plugin_method: null
 cck_plugin_method: null
-migration_tags:
-  - idc_ui_module_contact_email
+migration_tags: null
 migration_group: idc_ingest
-label: 'Entity: Contact Email (configuration entity)'
+label: 'Entity: Contact Email (configuration enity)'
 source:
   plugin: csv
   ids:
