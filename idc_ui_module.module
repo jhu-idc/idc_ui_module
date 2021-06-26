@@ -40,3 +40,45 @@ function idc_ui_module_theme($existing, $type, $theme, $path) {
     ]
   ];
 }
+
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+function idc_ui_module_file_download($uri) {
+  $MEDIA_TYPES = array('image', 'file', 'document', 'audio_file', 'video_file');
+
+  $files = file_load_multiple(array(), array(
+    'uri' => $uri,
+  ));
+  if (count($files)) {
+    foreach ($files as $item) {
+      if ($item->uri === $uri) {
+        $file = $item;
+        break;
+      }
+    }
+  }
+
+  $file = \Drupal::entityTypeManager()
+  ->getStorage('file')
+  ->loadByProperties([
+    'status' => 1,
+    'uri' => $uri,
+  ]);
+
+  foreach ($MEDIA_TYPES as &$media_type) {
+    $dynamic_field_media = 'field_media_' . $media_type;
+
+    $media = \Drupal::entityTypeManager()
+    ->getStorage('media')
+    ->loadByProperties([
+      'status' => 1,
+      $dynamic_field_media => array_values($file)[0]->id(),
+    ]);
+
+    if ($media_type == 'image' && array_values($media)[0] && array_values($media)[0]->get('field_restricted_access')->getString() == "1") {
+      return -1;
+    }
+  }
+
+  return;
+}
