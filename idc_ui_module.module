@@ -96,22 +96,25 @@ function idc_ui_module_file_download($uri) {
     'uri' => $uri,
   ]);
 
-  $current_user = \Drupal::currentUser();
-  $authorized_roles = ['administrator', 'collection_level_admin', 'global_admin'];
-  $is_authorized = !!count(array_intersect($authorized_roles, array_values($current_user->getRoles())));
+  if($file) {
+    $current_user = \Drupal::currentUser();
+    $authorized_roles = ['administrator', 'collection_level_admin', 'global_admin'];
+    $is_authorized = !!count(array_intersect($authorized_roles, array_values($current_user->getRoles())));
 
-  foreach ($MEDIA_TYPES as &$media_type_obj) {
-    $media = \Drupal::entityTypeManager()
-    ->getStorage('media')
-    ->loadByProperties([
-      'status' => 1,
-      $media_type_obj->source_field => array_values($file)[0]->id(),
-    ]);
+    foreach ($MEDIA_TYPES as &$media_type_obj) {
+      $media = \Drupal::entityTypeManager()
+      ->getStorage('media')
+      ->loadByProperties([
+        'status' => 1,
+        $media_type_obj->source_field => array_values($file)[0]->id(),
+      ]);
 
-    if (array_values($media)[0] && array_values($media)[0]->get('field_restricted_access')->getString() == "1" && !$is_authorized) {
-      return -1;
+      if (array_values($media)[0] && array_values($media)[0]->get('field_restricted_access')->getString() == "1" && !$is_authorized) {
+        return -1;
+      }
     }
   }
 
   return;
 }
+
