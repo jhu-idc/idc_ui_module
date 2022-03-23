@@ -187,7 +187,7 @@ function idc_ui_module_preprocess_status_messages(&$variables) {
 /**
  * Implements hook_media_insert().
  */
-function idc_ui_module_extraction_media_insert(MediaInterface $media) {
+function idc_ui_module_media_insert(MediaInterface $media) {
   if ($media->bundle() != 'extracted_text') {
     return;
   }
@@ -198,7 +198,7 @@ function idc_ui_module_extraction_media_insert(MediaInterface $media) {
 /**
  * Implements hook_media_update().
  */
-function idc_ui_module_extraction_media_update(MediaInterface $media) {
+function idc_ui_module_media_update(MediaInterface $media) {
   if ($media->bundle() != 'extracted_text') {
     return;
   }
