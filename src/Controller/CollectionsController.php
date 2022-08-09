@@ -50,7 +50,8 @@ class CollectionsController extends ControllerBase {
 
       if ($thumbnail) {
         $image_url = $thumbnail->getFileUri();
-        $image_display_url = file_create_url($image_url);
+        $image_display_url = $image_url->createFileUrl(FALSE);
+
       }
 
       $obj= (object) ['url' => $image_display_url, 'title' => $collection->get('title')->getString(), 'id' => $collection->id()];
@@ -115,7 +116,7 @@ class CollectionsController extends ControllerBase {
 
       if ($thumbnail) {
         $image_url = $thumbnail->getFileUri();
-        $image_display_url = file_create_url($image_url);
+        $image_display_url = $image_url->createFileUrl(FALSE);
       }
 
       $obj = (object) ['url' => $image_display_url, 'title' => $item->get('title')->getString(), 'id' => $item->id()];
