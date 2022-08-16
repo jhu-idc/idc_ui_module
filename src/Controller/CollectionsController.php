@@ -68,7 +68,7 @@ class CollectionsController extends ControllerBase {
     ];
   }
 
-  public function collection(\Drupal\node\Entity\Node $collection) {
+  public static function collection(\Drupal\node\Entity\Node $collection) {
     $featured_items = \Drupal::entityTypeManager()
       ->getListBuilder('node')
       ->getStorage()
@@ -106,6 +106,10 @@ class CollectionsController extends ControllerBase {
           'field_media_use' => array_values($thumbnail_taxonomy_term)[0]->id()
         ]);
 
+      if (empty($media)) {
+        continue;
+      }
+
       $thumbnail_id = array_values($media)[0]->thumbnail->target_id;
 
       $thumbnail = \Drupal::entityTypeManager()
@@ -115,8 +119,8 @@ class CollectionsController extends ControllerBase {
       $image_display_url = '';
 
       if ($thumbnail) {
-        $image_url = $thumbnail->getFileUri();
-        $image_display_url = $image_url->createFileUrl(FALSE);
+        // @phpstan-ignore-next-line
+        $image_display_url = \Drupal::service('file_url_generator')->generateAbsoluteString($thumbnail->getFileUri());
       }
 
       $obj = (object) ['url' => $image_display_url, 'title' => $item->get('title')->getString(), 'id' => $item->id()];
