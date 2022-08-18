@@ -2,6 +2,8 @@
 namespace Drupal\idc_ui_module\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\file\Entity\File;
+use Drupal\file\FileInterface;
 
 class CollectionsController extends ControllerBase {
   public function collections() {
@@ -50,11 +52,10 @@ class CollectionsController extends ControllerBase {
 
       if ($thumbnail) {
         $image_url = $thumbnail->getFileUri();
-        $image_display_url = $image_url->createFileUrl(FALSE);
-
+        $image_display_url = ($image_url) ? file_url_transform_relative(file_create_url($image_url)) : '';
       }
 
-      $obj= (object) ['url' => $image_display_url, 'title' => $collection->get('title')->getString(), 'id' => $collection->id()];
+      $obj = (object) ['url' => $image_display_url, 'title' => $collection->get('title')->getString(), 'id' => $collection->id()];
 
       array_push($featured_collections_array, $obj);
     }
@@ -120,7 +121,8 @@ class CollectionsController extends ControllerBase {
 
       if ($thumbnail) {
         // @phpstan-ignore-next-line
-        $image_display_url = \Drupal::service('file_url_generator')->generateAbsoluteString($thumbnail->getFileUri());
+        $image_url = $thumbnail->getFileUri();
+        $image_display_url = ($image_url) ? file_url_transform_relative(file_create_url($image_url)) : '';
       }
 
       $obj = (object) ['url' => $image_display_url, 'title' => $item->get('title')->getString(), 'id' => $item->id()];
