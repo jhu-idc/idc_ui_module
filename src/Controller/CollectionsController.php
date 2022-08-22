@@ -41,9 +41,12 @@ class CollectionsController extends ControllerBase {
           'field_media_of' => $collection_id,
           'field_media_use' => array_values($thumbnail_taxonomy_term)[0]->id(),
         ]);
-
-      $thumbnail_id = array_values($media)[0]->thumbnail->target_id;
-
+      if (isset(array_values($media)[0]->thumbnail->target_id)) {
+        $thumbnail_id = array_values($media)[0]->thumbnail->target_id;
+      }
+      else {
+        $thumbnail_id = '';
+      }
       $thumbnail = \Drupal::entityTypeManager()
         ->getStorage('file')
         ->load($thumbnail_id);
