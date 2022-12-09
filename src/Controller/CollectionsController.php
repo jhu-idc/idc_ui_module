@@ -2,6 +2,8 @@
 namespace Drupal\idc_ui_module\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\file\Entity\File;
+use Drupal\file\FileInterface;
 
 class CollectionsController extends ControllerBase {
   public function collections() {
@@ -39,9 +41,12 @@ class CollectionsController extends ControllerBase {
           'field_media_of' => $collection_id,
           'field_media_use' => array_values($thumbnail_taxonomy_term)[0]->id(),
         ]);
-
-      $thumbnail_id = array_values($media)[0]->thumbnail->target_id;
-
+      if (isset(array_values($media)[0]->thumbnail->target_id)) {
+        $thumbnail_id = array_values($media)[0]->thumbnail->target_id;
+      }
+      else {
+        $thumbnail_id = '';
+      }
       $thumbnail = \Drupal::entityTypeManager()
         ->getStorage('file')
         ->load($thumbnail_id);
@@ -50,10 +55,10 @@ class CollectionsController extends ControllerBase {
 
       if ($thumbnail) {
         $image_url = $thumbnail->getFileUri();
-        $image_display_url = file_create_url($image_url);
+        $image_display_url = ($image_url) ? file_url_transform_relative(file_create_url($image_url)) : '';
       }
 
-      $obj= (object) ['url' => $image_display_url, 'title' => $collection->get('title')->getString(), 'id' => $collection->id()];
+      $obj = (object) ['url' => $image_display_url, 'title' => $collection->get('title')->getString(), 'id' => $collection->id()];
 
       array_push($featured_collections_array, $obj);
     }
@@ -67,7 +72,7 @@ class CollectionsController extends ControllerBase {
     ];
   }
 
-  public function collection(\Drupal\node\Entity\Node $collection) {
+  public static function collection(\Drupal\node\Entity\Node $collection) {
     $featured_items = \Drupal::entityTypeManager()
       ->getListBuilder('node')
       ->getStorage()
@@ -105,6 +110,10 @@ class CollectionsController extends ControllerBase {
           'field_media_use' => array_values($thumbnail_taxonomy_term)[0]->id()
         ]);
 
+      if (empty($media)) {
+        continue;
+      }
+
       $thumbnail_id = array_values($media)[0]->thumbnail->target_id;
 
       $thumbnail = \Drupal::entityTypeManager()
@@ -114,8 +123,9 @@ class CollectionsController extends ControllerBase {
       $image_display_url = '';
 
       if ($thumbnail) {
+        // @phpstan-ignore-next-line
         $image_url = $thumbnail->getFileUri();
-        $image_display_url = file_create_url($image_url);
+        $image_display_url = ($image_url) ? file_url_transform_relative(file_create_url($image_url)) : '';
       }
 
       $obj = (object) ['url' => $image_display_url, 'title' => $item->get('title')->getString(), 'id' => $item->id()];

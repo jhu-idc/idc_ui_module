@@ -66,19 +66,23 @@ class IdcBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   public function build(RouteMatchInterface $route_match) {
 
     $nid = $route_match->getRawParameters()->get('node');
-    $node = $this->nodeStorage->load($nid);
+    $node = ($nid) ? $this->nodeStorage->load($nid) : NULL;
     $breadcrumb = new Breadcrumb();
+    
     $breadcrumb->addLink(Link::createFromRoute($this->t('Home'), '<front>'));
     $breadcrumb->addLink(Link::createFromRoute($this->t('All collections'), 'idc-ui-module.collections'));
 
     $chain = [];
+    $chain = array_filter($chain, function ($link) use ($nid) {
+      return $link !== $nid;
+    });
 
     if (!empty($nid)) {
       $this->walkMembership($node, $chain);
     }
 
-    if (!$this->config->get('includeSelf')) {
-      array_pop($chain);
+    if ($this->config->get('includeSelf')) {
+      array_push($chain, $nid);
     }
 
     $breadcrumb->addCacheableDependency($node);
