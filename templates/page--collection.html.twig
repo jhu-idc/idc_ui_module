@@ -57,7 +57,7 @@
               <a href={{ "/node/#{item.id}" }} class="flex-col mx-4 mb-4 w-64 h-64 shadow-md bg-white" data-test-featured-item>
                 <div class="flex h-48 w-64 bg-gray-100 items-center justify-center">
                   {% if item.url %}
-                    <img src={{item.url}} class="object-contain h-48 w-full" alt="featured item image" />
+                    <img src={{item.url}} class="featured object-contain h-48 w-full" alt="featured item image" />
                   {% else %}
                     <div class="text-gray-600 text-2lg">
                       No image available
