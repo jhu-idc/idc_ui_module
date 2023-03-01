@@ -157,18 +157,6 @@ function idc_ui_module_views_post_render(ViewExecutable $view, &$output, CachePl
 }
 
 /**
- * Implements hook_form_FORM_ID_alter()
- * Modify Repository Item Contact Form to the item's title to the subject
- */
-function idc_ui_module_form_contact_message_repository_item_contact_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
-  $node = \Drupal::routeMatch()->getParameter('node');
-
-  if (!empty($node)) {
-    $form['subject']['widget'][0]['value']['#default_value'] = $node->getTitle() . ' (' . $node->id() . ')';
-  }
-}
-
-/**
  * Implements hook_preprocess_HOOK().
  *
  * @param $variables
