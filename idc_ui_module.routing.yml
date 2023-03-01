@@ -1,29 +1,3 @@
-idc-ui-module.collections:
-  path: 'collections'
-  defaults:
-    _controller: '\Drupal\idc_ui_module\Controller\CollectionsController::collections'
-    _title: 'All collections'
-  options:
-    no_cache: TRUE
-  requirements:
-    _permission: 'access content'
-
-idc-ui-module.search:
-  path: 'search'
-  defaults:
-    _controller: '\Drupal\idc_ui_module\Controller\SearchController::searchPage'
-    _title: 'Search'
-  requirements:
-    _permission: 'access content'
-
-idc-ui-module.advanced-search:
-  path: 'advanced-search'
-  defaults:
-    _controller: '\Drupal\idc_ui_module\Controller\SearchController::advancedSearch'
-    _title: 'Advanced Search'
-  requirements:
-    _permission: 'access content'
-
 idc-ui-module.download_path:
   path: '/media_download_all/{entity_type}/{entity_id}'
   defaults:
