@@ -1,0 +1,55 @@
+{
+    "collection_object": {
+      "field_citable_url": {
+        "type": "link",
+        "label": "Citable URL",
+        "description": "Link to a Citable URL",
+        "required": true,
+        "cardinality": 1,
+        "settings": {
+          "link_type": "_none",
+          "title": "",
+          "title_display": "0",
+          "attributes": {
+            "target": false,
+            "rel": false,
+            "class": false,
+            "data-entity-type": "node",
+            "data-entity-uuid": ""
+          }
+        },
+        "instance_settings": {},
+        "widget": {
+          "type": "linkit_default",
+          "weight": 2
+        },
+        "display": {
+          "default": {
+            "type": "link"
+          }
+        }
+      },
+      "field_alternative_title": {
+        "type": "text",
+        "label": "Alternative Title",
+        "description": "Alternative title of the collection object.",
+        "required": false,
+        "cardinality": 1,
+        "settings": {
+          "max_length": 255,
+          "text_processing": 0
+        },
+        "instance_settings": {},
+        "widget": {
+          "type": "text_textfield",
+          "weight": 1
+        },
+        "display": {
+          "default": {
+            "type": "text_default"
+          }
+        }
+      }
+    }
+  }
+  

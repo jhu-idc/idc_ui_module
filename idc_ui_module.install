@@ -1,0 +1,56 @@
+<?php
+
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\ConfigImporterException;
+use Drupal\Core\Config\PreExistingConfigException;
+use Drupal\Core\File\FileSystemInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+/**
+ * Implements hook_install().
+ */
+function idc_ui_module_install() {
+  $config_factory = \Drupal::service('config.factory');
+  $config_importer = \Drupal::service('config.installer');
+  $file_system = \Drupal::service('file_system');
+
+  // Import field schema.
+  $field_storage_schema = \Drupal::moduleHandler()->getModule('field')->getSchema();
+  foreach ($field_storage_schema as $table => $fields) {
+    if (!$config_factory->getEditable('field.storage.' . $table)->isNew()) {
+      throw new PreExistingConfigException(sprintf(
+        'Configuration %s already exists and cannot be imported.',
+        'field.storage.' . $table
+      ));
+    }
+    \Drupal::service('config.storage')->write('field.storage.' . $table, $fields);
+  }
+
+  // Install the configs
+  $config_path = drupal_get_path('module', 'idc_ui_module') . '/config/install';
+  $config_files = $file_system->scanDirectory($config_path, '/\.yml$/');
+  $config_names = array_map(function ($file_path) {
+    return basename($file_path, '.yml');
+  }, $config_files);
+
+  foreach ($config_names as $config_name) {
+    $config_path = drupal_get_path('module', 'idc_ui_module') . "/config/install/{$config_name}.yml";
+    try {
+      $config_importer->install($config_name, $config_path);
+    } catch (PreExistingConfigException $e) {
+      // Handle configuration that already exists.
+      drupal_set_message($e->getMessage(), 'error');
+    } catch (ConfigImporterException $e) {
+      // Handle other exceptions.
+      drupal_set_message($e->getMessage(), 'error');
+    }
+  }
+}
+
+function idc_ui_module_uninstall() {
+    // Clear cache
+    drupal_flush_all_caches();
+    // $config_name = 'field.field.node.collection_object.field_citable_url';
+    // $config = \Drupal::configFactory()->getEditable($config_name);
+    // $config->delete();
+}
